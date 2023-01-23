@@ -1,7 +1,8 @@
-import { Model, INTEGER, STRING } from 'sequelize';
+import { CreationOptional, Model, INTEGER, STRING } from 'sequelize';
 import db from '.';
 
 class User extends Model {
+  declare id: CreationOptional<number>;
   declare email: string;
   declare password: string;
   declare role: string;
