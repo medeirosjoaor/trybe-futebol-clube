@@ -32,8 +32,8 @@ User.init({
     type: STRING(255),
   },
 }, {
-  modelName: 'users',
   sequelize: db,
+  tableName: 'users',
   timestamps: false,
 });
 
