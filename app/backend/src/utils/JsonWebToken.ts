@@ -17,9 +17,13 @@ class JsonWebToken {
   }
 
   public decode(token: string) {
-    const decoded = verify(token, this._secret) as IUser;
+    try {
+      const decoded = verify(token, this._secret);
 
-    return decoded;
+      return decoded as IUser;
+    } catch ({ message }) {
+      return undefined;
+    }
   }
 }
 

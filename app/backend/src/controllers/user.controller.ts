@@ -28,7 +28,7 @@ class UserController {
   public validateToken = (request: Request, response: Response) => {
     const token = request.header('authorization');
 
-    const { role } = jsonWebToken.decode(token as string);
+    const { role } = jsonWebToken.decode(token as string) as IUser;
 
     return response.status(200).json({ role });
   };
