@@ -1,6 +1,7 @@
 import * as express from 'express';
 import * as cors from 'cors';
 import LoginRouter from './routes/login.routes';
+import TeamRouter from './routes/team.routes';
 
 class App {
   public app: express.Express;
@@ -26,6 +27,7 @@ class App {
     this.app.use(accessControl);
     this.app.use(cors({ origin: ['http:127:0:0:1:3000', 'http:127:0:0:1:3001'] }));
     this.app.use(LoginRouter);
+    this.app.use(TeamRouter);
   }
 
   public start(PORT: string | number):void {
