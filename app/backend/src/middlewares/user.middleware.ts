@@ -17,7 +17,7 @@ class UserMiddleware {
     const user = await this._service.findOneByEmail(email) as User;
 
     if (!user) {
-      return response.status(400).json({ message: 'Incorrect email or password' });
+      return response.status(401).json({ message: 'Incorrect email or password' });
     }
 
     const { dataValues } = user as { dataValues: IUser };
@@ -25,7 +25,7 @@ class UserMiddleware {
     const match = await compare(password, dataValues.password as string);
 
     if (!match) {
-      return response.status(400).json({ message: 'Incorrect email or password' });
+      return response.status(401).json({ message: 'Incorrect email or password' });
     }
 
     next();
