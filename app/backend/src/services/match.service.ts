@@ -6,6 +6,7 @@ import IGoalsFavor from '../interfaces/GoalsFavor';
 import IGoalsOwn from '../interfaces/GoalsOwn';
 
 const homeTeamId = 'homeTeam.id';
+const awayTeamId = 'awayTeam.id';
 
 class MatchService {
   constructor(private _model = Match) {}
@@ -52,12 +53,38 @@ class MatchService {
     return goalsFavor as IGoalsFavor[];
   }
 
+  public async getAwayGoalsFavor(): Promise<IGoalsFavor[]> {
+    const goalsFavor = await this._model.findAll({
+      attributes: [[fn('JSON_ARRAYAGG', col('Match.away_team_goals')), 'goalsFavor']],
+      group: awayTeamId,
+      include: { as: 'awayTeam', attributes: [], model: Team },
+      order: col(awayTeamId),
+      raw: true,
+      where: { inProgress: false },
+    }) as [];
+
+    return goalsFavor as IGoalsFavor[];
+  }
+
   public async getHomeGoalsOwn(): Promise<IGoalsOwn[]> {
     const goalsOwn = await this._model.findAll({
       attributes: [[fn('JSON_ARRAYAGG', col('Match.away_team_goals')), 'goalsOwn']],
       group: homeTeamId,
       include: { as: 'homeTeam', attributes: [], model: Team },
       order: col(homeTeamId),
+      raw: true,
+      where: { inProgress: false },
+    }) as [];
+
+    return goalsOwn as IGoalsOwn[];
+  }
+
+  public async getAwayGoalsOwn(): Promise<IGoalsOwn[]> {
+    const goalsOwn = await this._model.findAll({
+      attributes: [[fn('JSON_ARRAYAGG', col('Match.home_team_goals')), 'goalsOwn']],
+      group: awayTeamId,
+      include: { as: 'awayTeam', attributes: [], model: Team },
+      order: col(awayTeamId),
       raw: true,
       where: { inProgress: false },
     }) as [];

@@ -44,6 +44,48 @@ class MatchController {
     return response.status(200).json(standings.standings);
   };
 
+  public getAwayLeaderboard = async (_: Request, response: Response) => {
+    const names = await this._teamService.findAll();
+    const goalsFavor = await this._service.getAwayGoalsFavor();
+    const goalsOwn = await this._service.getAwayGoalsOwn();
+
+    const standings = new Standings();
+
+    goalsFavor.forEach((v, i) => {
+      const campaign = new Campaign(names[i].teamName, v.goalsFavor, goalsOwn[i].goalsOwn);
+
+      standings.push(campaign.campaign);
+    });
+
+    standings.sort();
+
+    return response.status(200).json(standings.standings);
+  };
+
+  public getLeaderboard = async (_: Request, response: Response) => {
+    const names = await this._teamService.findAll();
+    const homeGoalsFavor = await this._service.getHomeGoalsFavor();
+    const homeGoalsOwn = await this._service.getHomeGoalsOwn();
+    const awayGoalsFavor = await this._service.getAwayGoalsFavor();
+    const awayGoalsOwn = await this._service.getAwayGoalsOwn();
+
+    const standings = new Standings();
+
+    homeGoalsFavor.forEach((v, i) => {
+      const campaign = new Campaign(
+        names[i].teamName,
+        v.goalsFavor.concat(awayGoalsFavor[i].goalsFavor),
+        homeGoalsOwn[i].goalsOwn.concat(awayGoalsOwn[i].goalsOwn),
+      );
+
+      standings.push(campaign.campaign);
+    });
+
+    standings.sort();
+
+    return response.status(200).json(standings._standings);
+  };
+
   public finishMatch = async (request: Request, response: Response) => {
     const { id } = request.params;
 
